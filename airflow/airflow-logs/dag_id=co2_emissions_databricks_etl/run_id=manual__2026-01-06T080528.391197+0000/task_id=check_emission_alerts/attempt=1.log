@@ -1,0 +1,24 @@
+[2026-01-06T08:08:49.488+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: co2_emissions_databricks_etl.check_emission_alerts manual__2026-01-06T08:05:28.391197+00:00 [queued]>
+[2026-01-06T08:08:49.498+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: co2_emissions_databricks_etl.check_emission_alerts manual__2026-01-06T08:05:28.391197+00:00 [queued]>
+[2026-01-06T08:08:49.499+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 3
+[2026-01-06T08:08:49.518+0000] {taskinstance.py:2191} INFO - Executing <Task(ShortCircuitOperator): check_emission_alerts> on 2026-01-06 08:05:28.391197+00:00
+[2026-01-06T08:08:49.526+0000] {standard_task_runner.py:60} INFO - Started process 1691 to run task
+[2026-01-06T08:08:49.530+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'co2_emissions_databricks_etl', 'check_emission_alerts', 'manual__2026-01-06T08:05:28.391197+00:00', '--job-id', '30', '--raw', '--subdir', 'DAGS_FOLDER/co2_emissions.py', '--cfg-path', '/tmp/tmpi9srsb5_']
+[2026-01-06T08:08:49.533+0000] {standard_task_runner.py:88} INFO - Job 30: Subtask check_emission_alerts
+[2026-01-06T08:08:49.602+0000] {task_command.py:423} INFO - Running <TaskInstance: co2_emissions_databricks_etl.check_emission_alerts manual__2026-01-06T08:05:28.391197+00:00 [running]> on host f2fb2b408209
+[2026-01-06T08:08:49.684+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='Nikhitha' AIRFLOW_CTX_DAG_ID='co2_emissions_databricks_etl' AIRFLOW_CTX_TASK_ID='check_emission_alerts' AIRFLOW_CTX_EXECUTION_DATE='2026-01-06T08:05:28.391197+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-01-06T08:05:28.391197+00:00'
+[2026-01-06T08:08:49.685+0000] {co2_emissions.py:33} INFO - 🔍 Checking CO₂ emission alerts in GOLD table...
+[2026-01-06T08:08:49.724+0000] {base.py:83} INFO - Using connection ID 'databricks_default' for task execution.
+[2026-01-06T08:08:54.297+0000] {client.py:200} INFO - Successfully opened session 01f0ead6-f082-1053-8851-821df9e3f0b5
+[2026-01-06T08:08:54.298+0000] {sql.py:450} INFO - Running statement: SELECT COUNT(*)
+    FROM co2_emissions.default.gold_emission_alerts
+    WHERE alert_status = 'ALERT', parameters: None
+[2026-01-06T08:09:19.554+0000] {client.py:258} INFO - Closing session 01f0ead6-f082-1053-8851-821df9e3f0b5
+[2026-01-06T08:09:19.824+0000] {co2_emissions.py:47} INFO - 🚨 Alert count: 17
+[2026-01-06T08:09:19.825+0000] {python.py:201} INFO - Done. Returned value was: True
+[2026-01-06T08:09:19.826+0000] {python.py:268} INFO - Condition result is True
+[2026-01-06T08:09:19.826+0000] {python.py:271} INFO - Proceeding with downstream tasks...
+[2026-01-06T08:09:19.858+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=co2_emissions_databricks_etl, task_id=check_emission_alerts, execution_date=20260106T080528, start_date=20260106T080849, end_date=20260106T080919
+[2026-01-06T08:09:19.859+0000] {co2_emissions.py:136} INFO - ✅ Pipeline completed in 30.368853s
+[2026-01-06T08:09:19.904+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2026-01-06T08:09:19.933+0000] {taskinstance.py:3280} INFO - 1 downstream tasks scheduled from follow-on schedule check
