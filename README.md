@@ -267,6 +267,53 @@ When emission anomalies are detected:
   - Total number of affected countries  
   - Country-wise emission vs threshold comparison  
   - Embedded **Power BI dashboard snapshot**
+ ---
+## 📧 SMTP Email Alerting (Apache Airflow)
+
+This project uses **Apache Airflow’s EmailOperator** with **SMTP configuration** to send automated CO₂ emission alerts when anomalies are detected in the Gold layer.
+
+---
+
+## ⚙️ SMTP Setup Overview
+
+SMTP is configured using Airflow Connections:
+```
+Airflow UI → Admin → Connections → smtp_default
+```
+
+**Key Settings**
+- SMTP Host: `smtp.gmail.com`
+- Port: `587`
+- STARTTLS: Enabled
+- Authentication: Gmail **App Password**
+- Credentials stored securely (not hardcoded)
+
+---
+
+## 🔄 Email Alert Flow
+```
+Emission Alert Detected
+↓
+Airflow EmailOperator
+↓
+SMTP Server
+↓
+Email Sent to Stakeholders
+```
+
+---
+
+## 🧩 Usage in DAG
+
+Emails are triggered **only if alerts exist**, ensuring no unnecessary notifications.
+
+```python
+EmailOperator(
+    task_id="send_emission_alert_email",
+    subject="🚨 CO₂ Emission Spike Alert",
+    html_content="Dynamic alert details"
+)
+```
 This ensures stakeholders receive **immediate, contextual insights** directly in their inbox.
 <img width="1386" height="688" alt="image" src="https://github.com/user-attachments/assets/6d8b7f7b-85c9-43f1-ab78-ab1da1c90277" />
 
