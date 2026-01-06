@@ -141,6 +141,7 @@ co2_per_capita = co2_emissions_mt / population
   - Eco-Friendly  
 
 ---
+
 ## 🚨 Emission Alerting Mechanism
 
 ### 🔍 Alert Design Logic
@@ -153,6 +154,42 @@ co2_per_capita = co2_emissions_mt / population
 - No hardcoded limits  
 - Automatically adapts as data changes  
 - Reduces false positives in skewed datasets  
+
+---
+## 🏗️ Data Processing & ETL
+<img width="1220" height="719" alt="ETL Pipeline" src="https://github.com/user-attachments/assets/3a5f141f-502d-4e04-abca-b4456cc037b9" />
+The ETL pipeline follows a Bronze–Silver–Gold medallion architecture implemented using Delta Live Tables on Databricks. Raw CO₂ emissions data is ingested into the Bronze layer, cleaned and enriched in the Silver layer, and transformed into multiple analytics-ready Gold tables. The pipeline is fully automated, scalable, and maintains clear data lineage with built-in dependency tracking.
+
+---
+### 🛠 Airflow Setup (Docker-based)
+
+The following Docker Compose commands were used to initialize and manage Airflow locally:
+
+```bash
+# Initialize Airflow metadata database
+docker compose run --rm airflow-webserver airflow db init
+
+# Create Airflow admin user
+docker compose run --rm airflow-webserver airflow users create \
+  --username admin \
+  --firstname Nikhitha \
+  --lastname Bandela \
+  --role Admin \
+  --email nikki@example.com \
+  --password admin
+
+# Start all Airflow services (webserver, scheduler, etc.)
+docker compose up -d
+
+# Stop and clean up Airflow services
+docker compose down
+```
+
+### 🔐 Airflow Access
+
+* **URL:** `http://localhost:8080`
+* **Username:** `admin`
+* **Password:** `admin`
 
 ---
 
@@ -182,6 +219,7 @@ Send Email Notification
 - Performs post-ETL alert checks using `ShortCircuitOperator`  
 - Sends notifications only when anomalies are detected  
 - Prevents redundant or unnecessary alerts  
+<img width="1876" height="578" alt="Airflow-Trigger Result" src="https://github.com/user-attachments/assets/a6b6a219-4de8-4e7d-9250-549ee3868340" />
 
 ---
 
@@ -194,31 +232,83 @@ When emission anomalies are detected:
   - Country-wise emission vs threshold comparison  
   - Embedded **Power BI dashboard snapshot**
 This ensures stakeholders receive **immediate, contextual insights** directly in their inbox.
+<img width="1386" height="688" alt="image" src="https://github.com/user-attachments/assets/6d8b7f7b-85c9-43f1-ab78-ab1da1c90277" />
+
 
 ---
 
 ## 📊 Power BI Dashboards
 
 ### 📍 Dashboard 1: Global Emissions Overview
-- Line chart: Global CO₂ trend  
-- KPI cards:
-  - Total CO₂ emissions  
-  - Highest emitting region  
-  - Global average CO₂ per capita  
-- Map visualization:
-  - Country-level sustainability clusters  
+**Purpose:**
+Analyze long-term global CO₂ emission trends and country-wise contributions.
+
+**Key Insights:**
+
+- Year-wise global CO₂ emissions trends (1990–2020)
+- Country-wise contribution to total emissions
+- Year-over-year emission growth and decline
+- Interactive year-based analysis
+
+**Business Value:**
+Supports data-driven climate policy decisions by highlighting emission patterns, major contributors, and abnormal changes over time.
+    
+<img width="575" height="324" alt="Co2 Emission Trend Analysis" src="https://github.com/user-attachments/assets/d308b6a1-5e6f-40d9-91df-1f1d7321aeb1" />
+
 
 ### 📍 Dashboard 2: Regional & Country Comparison
-- Region-wise emission bar charts  
-- Country ranking tables  
-- Income-level comparison visuals  
+**Purpose:**
+Compare CO₂ emissions across regions to identify high-emission zones and per-capita impact.
+
+**Key Insights:**
+
+- Total CO₂ emissions by region
+- Highest emitting region identification
+- Average CO₂ emissions per capita across regions
+- Sustainability clusters mapped geographically
+
+**Business Value:**
+Helps policymakers prioritize regions for targeted emission reduction strategies and sustainability planning.
+
+<img width="575" height="324" alt="Regional Emission Comparisions" src="https://github.com/user-attachments/assets/05dd3b23-1bb6-4d6c-b5a5-2cc07003a345" />
+
 
 ### 📍 Dashboard 3: Policy Simulation (Interactive)
-- Year range slicer  
-- Active Emission Alerts by country & year
-- Analysis based on population & income level
+**Purpose:**
+Monitor key environmental KPIs and evaluate emissions against policy-driven targets.
 
----
+**Key Insights:**
+
+- Total global CO₂ emissions and average emissions per capita
+- Correlation between population and CO₂ emissions by country
+- CO₂ emissions distribution across income levels
+- Active emission alerts by region and year
+- Actual vs target emissions comparison with reduction simulation
+
+**Business Value:**
+Supports policymakers in tracking sustainability targets, identifying high-risk regions, and assessing the effectiveness of emission reduction strategies.
+   
+<img width="575" height="324" alt="Environmental   Policy Insights" src="https://github.com/user-attachments/assets/e331410e-d80c-4025-8cc9-e659c1527608" />
+
+
+
+### 📍 Dashboard 4: Emission Alert Analysis
+**Purpose:**
+Monitor abnormal CO₂ emission spikes and track alert patterns across time, regions, and countries.
+
+**Key Insights:**
+
+- Year-wise distribution of active emission alerts
+- Geographic visualization of alert locations
+- Country-level alert counts and trends
+- Region-wise alert contribution analysis
+- Total active emission alerts overview
+
+**Business Value:**
+Enables proactive environmental monitoring by identifying emission anomalies early and supporting timely, targeted intervention strategies.
+    
+<img width="575" height="324" alt="Emission Alert Analysis" src="https://github.com/user-attachments/assets/ab653cd3-143b-4540-8623-cd9acd6175a3" />
+
 
 ## 🧠 Advanced Analytics & DAX
 - Percentile-based clustering logic  
@@ -227,7 +317,13 @@ This ensures stakeholders receive **immediate, contextual insights** directly in
 - Dynamic text KPIs using multiline DAX expressions  
 
 ---
+## 🔹 Logging, Monitoring & Observability
 
+Execution-level logging and monitoring are handled by Apache Airflow and Azure Databricks, providing end-to-end visibility into the CO₂ emissions ETL pipeline without requiring custom logging logic.
+
+Apache Airflow captures detailed logs for DAG scheduling, task execution, retries, and alert-trigger conditions, while Databricks records job execution details, Delta Live Tables lineage, Spark driver logs, and executor metrics through its managed runtime environment. This ensures reliable observability, faster troubleshooting, and consistent monitoring across all pipeline layers.
+
+---
 ## 🧪 Testing & Validation
 - Schema validation at Bronze and Silver layers  
 - Data quality checks for nulls and invalid records  
