@@ -61,18 +61,54 @@ Email Alerts + Power BI Dashboards
 - Source: Global CO₂ emissions dataset (Kaggle reference)
 - Records: 100,000+  
 - Granularity: Country–Year  
-- Key Attributes:
-  - Country
-  - Region
-  - Income Level
-  - Year
-  - CO₂ Emissions (Metric Tons)
-  - Population  
+### 🔑 Key Attributes
+
+| Attribute Name            | Description                              | Data Type |
+|--------------------------|------------------------------------------|-----------|
+| Country                  | Country name                              | String    |
+| Region                   | Geographical region                      | String    |
+| Income Level             | World Bank income classification         | String    |
+| Year                     | Year of record                           | Integer   |
+| CO₂ Emissions (Metric Tons) | Total CO₂ emissions for the country     | Float     |
+| Population               | Total population of the country          | Integer   |
+ 
 
 Missing and inconsistent values were intentionally included to demonstrate real-world data cleaning and validation.
 
 ---
-
+## 📂 Project Structure
+```
+📦 Co2_Emission_Analytics
+│
+├── 🚀 airflow/                          # Workflow Orchestration
+│   ├── 📋 dags/
+│   │   └── co2_emissions.py    # Main pipeline orchestration
+│   ├── 🐳 docker-compose.yml           # Infrastructure definition
+│   └── 📝 logs/                        # Execution audit trail
+│
+├── 📊 dataset/                          # Data Sources
+│   └── co2_emissions.csv  # Sample data
+│
+├── ⚙️ co2_emissions_etl_pipeline                   # Data Processing Scripts             
+│
+├── 📓 notebooks/                        # Development Notebooks
+│   ├── 01_bronze_ingestion.ipynb        # Bronze layer development
+│   ├── 02_silver_transformation.ipynb   # Silver layer development
+│   └── 03_gold_aggregation.ipynb         # Gold layer development
+│
+├── 📈Emission_Analytic_System_Visualization.pbix        # Power BI dashboard          
+│
+├── 📤 Results/                           # Analytics Preview
+│   └── Dashboard Images                  # Sample outputs
+│   └── Airflow-Tasks
+|   └── Airflow-Trigger Result
+|   └── DAG Graph
+|   └── Email Alert
+|   └── DOrchestration Pipeline
+|   └── ETL Pipeline
+└── 📖 README.md                         # Project documentation
+```
+---
 ## 🟤 Bronze Layer — Raw Ingestion
 
 **Purpose**
