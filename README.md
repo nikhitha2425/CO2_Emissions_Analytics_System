@@ -7,20 +7,25 @@
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 ## 📌 Project Overview
-This capstone project implements an **end-to-end data analytics pipeline** to analyze **global CO₂ emissions**, identify high-emission regions, and support **environmental planning and sustainability goals**.
+This capstone project implements a **production-style climate analytics and monitoring platform** to analyze global CO₂ emissions, detect abnormal emission spikes, and support **data-driven environmental decision-making**.
 
-The system follows an **industry-standard Medallion Architecture (Bronze → Silver → Gold)** using **Databricks Lakeflow (Delta Live Tables)** and delivers **interactive Power BI dashboards** for policymakers and stakeholders.
+The system integrates:
+- Scalable **Databricks Lakehouse** architecture  
+- **Delta Live Tables (DLT)** for declarative data pipelines  
+- **Apache Airflow** for orchestration and alerting  
+- **Power BI** for interactive analytics and policy simulations  
 
-Databricks | Delta Live Tables | Power BI | Data Engineering | Apache Airflow
+Unlike traditional dashboards that require manual monitoring, this project introduces **automated anomaly detection and proactive alerting**, transforming static analytics into an **active monitoring system**.
 
 ---
 
 ## 🎯 Project Objectives
-- Automate CO₂ emissions data ingestion and processing  
-- Analyze emission trends and regional comparisons  
-- Identify high-emission regions and countries  
-- Enable policy-driven emission reduction simulations  
-- Provide clear, data-driven visual insights for decision-makers  
+- Automate ingestion and processing of global CO₂ emissions data  
+- Design a **Bronze → Silver → Gold** Medallion Architecture  
+- Identify high-emission countries and regions  
+- Detect abnormal emission spikes using dynamic thresholds  
+- Orchestrate pipelines and alerts using Apache Airflow  
+- Deliver policy-oriented and interactive insights via Power BI  
 
 ---
 
@@ -28,23 +33,27 @@ Databricks | Delta Live Tables | Power BI | Data Engineering | Apache Airflow
 ```
 Raw CSV / Delta Data
 ↓
-Bronze Layer (DLT Streaming Table)
+Databricks Bronze Layer (DLT)
 ↓
-Silver Layer (Cleaning, Standardization, Enrichment)
+Databricks Silver Layer (Cleaning & Enrichment)
 ↓
-Gold Layer (Analytics & Business Tables)
+Databricks Gold Layer (Analytics + Alerts)
 ↓
-Power BI Dashboards
+Apache Airflow (Orchestration & Conditional Logic)
+↓
+Email Alerts + Power BI Dashboards
 ```
 
 ---
 
 ## 🛠️ Technology Stack
-- **Databricks Lakehouse**
+- **Databricks Lakehouse (Azure)**
 - **Delta Live Tables (DLT)**
-- **Apache Spark (SQL)**
-- **Power BI**
-- **Apache Airflow (Databricks Job Trigger)**
+- **Apache Spark (SQL / PySpark)**
+- **Apache Airflow**
+- **Power BI (Desktop)**
+- **Python**
+- **Docker (Airflow deployment)**
 
 ---
 
@@ -132,6 +141,61 @@ co2_per_capita = co2_emissions_mt / population
   - Eco-Friendly  
 
 ---
+## 🚨 Emission Alerting Mechanism
+
+### 🔍 Alert Design Logic
+- Alerts are generated **only from Gold-layer data**  
+- Annual country-level emissions are evaluated  
+- A **95th percentile** threshold defines normal behavior  
+- Countries exceeding this threshold are flagged as **ALERT**
+
+**Why percentile-based alerts?**
+- No hardcoded limits  
+- Automatically adapts as data changes  
+- Reduces false positives in skewed datasets  
+
+---
+
+## ⚙️ Workflow Orchestration with Apache Airflow
+
+Apache Airflow acts as the **control plane** for the system.
+### 🔄 Airflow Execution Flow
+```
+Airflow DAG Trigger
+↓
+Databricks Serverless Job Execution
+↓
+Gold Tables Generated
+↓
+Emission Alert Check
+↓
+(Alert Exists?)
+┌──── Yes ────┐
+↓             ↓
+Prepare Alert Stop Workflow
+Email Content
+↓
+Send Email Notification
+```
+### 🔧 Airflow Responsibilities
+- Triggers Databricks pipelines using `DatabricksRunNowOperator`  
+- Performs post-ETL alert checks using `ShortCircuitOperator`  
+- Sends notifications only when anomalies are detected  
+- Prevents redundant or unnecessary alerts  
+
+---
+
+## 📧 Automated Alert Notifications
+
+When emission anomalies are detected:
+- Airflow generates a **dynamic HTML email**
+- Email includes:
+  - Total number of affected countries  
+  - Country-wise emission vs threshold comparison  
+  - Embedded **Power BI dashboard snapshot**
+This ensures stakeholders receive **immediate, contextual insights** directly in their inbox.
+
+---
 
 ## 📊 Power BI Dashboards
 
@@ -151,10 +215,8 @@ co2_per_capita = co2_emissions_mt / population
 
 ### 📍 Dashboard 3: Policy Simulation (Interactive)
 - Year range slicer  
-- Target reduction percentage slider (0%–50%)  
-- Line chart:
-  - Actual emissions (solid line)  
-  - Target reduction path (dotted line)  
+- Active Emission Alerts by country & year
+- Analysis based on population & income level
 
 ---
 
@@ -163,14 +225,6 @@ co2_per_capita = co2_emissions_mt / population
 - Disconnected parameter table for simulation  
 - Context-aware KPI measures  
 - Dynamic text KPIs using multiline DAX expressions  
-
----
-
-## 🔄 Workflow Automation
-- ETL implemented using Databricks Delta Live Tables  
-- Databricks Job created for pipeline execution  
-- Apache Airflow triggers the Databricks job  
-- Enables scheduled and monitored pipeline runs  
 
 ---
 
@@ -185,22 +239,21 @@ co2_per_capita = co2_emissions_mt / population
 ## 🚧 Challenges & Solutions
 
 | Challenge | Solution |
-|--------|--------|
-| Invalid CSV headers | Converted dataset to Delta format |
+|--------|---------|
+| Messy real-world CSV data | Converted to Delta with validation |
 | Country–region duplication | Normalized in Silver layer |
-| Skewed emissions distribution | Percentile-based clustering |
-| DLT SQL limitations | Declarative materialized views |
-| Visual slicer issues | Configured Edit Interactions |
-
+| Skewed emission distribution | Percentile-based clustering |
+| Delta Live Tables constraints | Declarative materialized views |
+| Alert noise | Conditional Airflow execution |
 ---
 
 ## 🎓 Key Learnings
-- Designing scalable Medallion architectures  
-- Working with Delta Live Tables constraints  
-- Implementing policy-oriented analytics  
-- Handling real-world, messy datasets  
-- Building interactive Power BI dashboards  
-
+- Designing scalable **Lakehouse architectures**  
+- Working within **Delta Live Tables constraints**  
+- Handling real-world data quality issues  
+- Building **proactive alerting systems**  
+- Orchestrating pipelines using **Apache Airflow**  
+- Translating analytics into policy-driven insights  
 ---
 
 ## 🚀 Future Enhancements
@@ -212,8 +265,11 @@ co2_per_capita = co2_emissions_mt / population
 ---
 
 ## 🧾 Conclusion
-This project demonstrates a **real-world climate analytics use case**, combining **data engineering**, **advanced analytics**, and **interactive visualization** to support **sustainability-focused decision-making**.
+This project demonstrates how modern data platforms can evolve from **static reporting** to **proactive climate monitoring systems**.
 
+By integrating Databricks, Airflow, alerting mechanisms, and Power BI, the solution enables early detection of emission anomalies and supports **sustainability-focused decision-making**.
+
+> *From visualizing climate data to actively monitoring emission risks.*
 ---
 
 ## 👤 Author
